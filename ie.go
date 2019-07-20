@@ -1,10 +1,7 @@
-// Copyright 2018 shingo authors. All rights reserved.
+// Copyright 2019 go-tcap authors. All rights reserved.
 // Use of this source code is governed by a MIT-style license that can be
 // found in the LICENSE file.
 
-/*
-Package tcap provides encoding/decoding feature of Transaction Capabilities Application Part in SS7/SIGTRAN protocol stack.
-*/
 package tcap
 
 import (
