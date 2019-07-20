@@ -311,7 +311,7 @@ func (t *TCAP) OpCode() []uint8 {
 //
 // The returned value is of type [][]byte, as it may have multiple Components.
 func (t *TCAP) LayerPayload() [][]byte {
-	if c := t.Components; c == nil {
+	if c := t.Components; c != nil {
 		var ret [][]byte
 		for _, cm := range c.Component {
 			ret = append(ret, cm.Parameter.Value)

@@ -223,12 +223,10 @@ func (c *Components) MarshalTo(b []byte) error {
 	b[0] = uint8(c.Tag)
 	b[1] = c.Length
 
-	var offset = 2
 	for _, comp := range c.Component {
-		if err := comp.MarshalTo(b[offset : offset+comp.MarshalLen()]); err != nil {
+		if err := comp.MarshalTo(b[2 : 2+comp.MarshalLen()]); err != nil {
 			return err
 		}
-		offset += comp.MarshalLen()
 	}
 	return nil
 }
@@ -248,10 +246,12 @@ func (c *Component) MarshalTo(b []byte) error {
 	b[1] = c.Length
 
 	var offset = 2
-	if err := c.InvokeID.MarshalTo(b[offset : offset+c.InvokeID.MarshalLen()]); err != nil {
-		return err
+	if field := c.InvokeID; field != nil {
+		if err := field.MarshalTo(b[offset : offset+field.MarshalLen()]); err != nil {
+			return err
+		}
+		offset += field.MarshalLen()
 	}
-	offset += c.InvokeID.MarshalLen()
 
 	switch c.Type.Code() {
 	case Invoke:
@@ -273,7 +273,6 @@ func (c *Component) MarshalTo(b []byte) error {
 			if err := field.MarshalTo(b[offset : offset+field.MarshalLen()]); err != nil {
 				return err
 			}
-			offset += field.MarshalLen()
 		}
 	case ReturnResultLast, ReturnResultNotLast:
 		if field := c.ResultRetres; field != nil {
@@ -294,7 +293,6 @@ func (c *Component) MarshalTo(b []byte) error {
 			if err := field.MarshalTo(b[offset : offset+field.MarshalLen()]); err != nil {
 				return err
 			}
-			offset += field.MarshalLen()
 		}
 	case ReturnError:
 		if field := c.ErrorCode; field != nil {
@@ -308,14 +306,12 @@ func (c *Component) MarshalTo(b []byte) error {
 			if err := field.MarshalTo(b[offset : offset+field.MarshalLen()]); err != nil {
 				return err
 			}
-			offset += field.MarshalLen()
 		}
 	case Reject:
 		if field := c.ProblemCode; field != nil {
 			if err := field.MarshalTo(b[offset : offset+field.MarshalLen()]); err != nil {
 				return err
 			}
-			offset += field.MarshalLen()
 		}
 	}
 	return nil
