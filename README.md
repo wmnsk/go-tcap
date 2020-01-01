@@ -38,7 +38,7 @@ GO111MODULE=on go [test | build | run | etc...]
 #### Message Types
 
 | Message type   | Supported? |
-| -------------- | ---------- |
+|----------------|------------|
 | Unidirectional |            |
 | Begin          | Yes        |
 | End            | Yes        |
@@ -48,7 +48,7 @@ GO111MODULE=on go [test | build | run | etc...]
 #### Fields
 
 | Tag                        | Supported? |
-| -------------------------- | ---------- |
+|----------------------------|------------|
 | Originating Transaction ID | Yes        |
 | Destination Transaction ID | Yes        |
 | P-Abort Cause              | Yes        |
@@ -58,7 +58,7 @@ GO111MODULE=on go [test | build | run | etc...]
 #### Component types
 
 | Component type           | Supported? |
-| ------------------------ | ---------- |
+|--------------------------|------------|
 | Invoke                   | Yes        |
 | Return Result (Last)     | Yes        |
 | Return Result (Not Last) | Yes        |
@@ -71,7 +71,7 @@ GO111MODULE=on go [test | build | run | etc...]
 #### Dialogue types
 
 | Dialogue type                       | Supported? |
-| ----------------------------------- | ---------- |
+|-------------------------------------|------------|
 | Dialogue Request (AARQ-apdu)        | Yes        |
 | Dialogue Response (AARE-apdu)       | Yes        |
 | Dialogue Abort (ABRT-apdu)          | Yes        |
@@ -80,7 +80,7 @@ GO111MODULE=on go [test | build | run | etc...]
 #### Elements 
 
 | Tag                         | Type         | Supported? |
-| --------------------------- | ------------ | ---------- |
+|-----------------------------|--------------|------------|
 | Object Identifier           | Structured   | Yes        |
 | Single-ASN.1-type           | Structured   | Yes        |
 | Dialogue PDU                | Structured   | Yes        |
@@ -91,7 +91,7 @@ GO111MODULE=on go [test | build | run | etc...]
 
 ## Author(s)
 
-Yoshiyuki Kurauchi ([My Website](https://wmnsk.com/) / [Twitter](https://twitter.com/wmnskdmms))
+Yoshiyuki Kurauchi ([Website](https://wmnsk.com/) / [Twitter](https://twitter.com/wmnskdmms))
 
 I'm always open to welcome co-authors! Please feel free to talk to me.
 
