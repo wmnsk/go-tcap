@@ -402,7 +402,6 @@ func (c *Component) UnmarshalBinary(b []byte) error {
 		if err != nil {
 			return err
 		}
-		offset += c.Parameter.MarshalLen()
 	case ReturnResultLast, ReturnResultNotLast:
 		c.ResultRetres, err = ParseIE(b[offset:])
 		if err != nil {
@@ -421,7 +420,6 @@ func (c *Component) UnmarshalBinary(b []byte) error {
 		if err != nil {
 			return err
 		}
-		offset += c.Parameter.MarshalLen()
 	case ReturnError:
 		c.ErrorCode, err = ParseIE(b[offset:])
 		if err != nil {
@@ -433,13 +431,11 @@ func (c *Component) UnmarshalBinary(b []byte) error {
 		if err != nil {
 			return err
 		}
-		offset += c.Parameter.MarshalLen()
 	case Reject:
 		c.ProblemCode, err = ParseIE(b[offset:])
 		if err != nil {
 			return err
 		}
-		offset += c.ProblemCode.MarshalLen()
 	}
 	return nil
 }

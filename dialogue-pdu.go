@@ -468,7 +468,6 @@ func (d *DialoguePDU) parseAAREFromBytes(b []byte) error {
 			if err != nil {
 				return err
 			}
-			offset += d.UserInformation.MarshalLen()
 		}
 	}
 
@@ -489,7 +488,6 @@ func (d *DialoguePDU) parseABRTFromBytes(b []byte) error {
 			if err != nil {
 				return err
 			}
-			offset += d.UserInformation.MarshalLen()
 		}
 	}
 
