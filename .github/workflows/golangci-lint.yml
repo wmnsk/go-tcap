@@ -17,4 +17,6 @@ jobs:
         uses: golangci/golangci-lint-action@v2
         with:
           # Required: the version of golangci-lint is required and must be specified without patch version: we always use the latest patch version.
-          version: v1.29
+          version: v1.33
+          # Optional: golangci-lint command line arguments.
+          args: --issues-exit-code=1 --timeout=3m0s --tests=false --no-config --max-issues-per-linter=4095 --max-same-issues=1023 --disable-all --enable=deadcode --enable=errcheck --enable=gosimple --enable=govet --enable=ineffassign --enable=staticcheck --enable=structcheck --enable=typecheck --enable=unused --enable=varcheck --enable=bodyclose --enable=dogsled --enable=goconst --enable=gocritic --enable=gofmt --enable=goimports --enable=golint --enable=goprintffuncname --enable=gosec --enable=interfacer --enable=misspell --enable=nakedret --enable=prealloc --enable=rowserrcheck --enable=scopelint --enable=stylecheck --enable=unconvert --enable=unparam --enable=exportloopref --enable=gomodguard --enable=asciicheck --enable=errorlint
