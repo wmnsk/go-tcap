@@ -1,6 +1,6 @@
 module github.com/wmnsk/go-tcap
 
-go 1.12
+go 1.15
 
 require (
 	github.com/pascaldekloe/goe v0.1.0
