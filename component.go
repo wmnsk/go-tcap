@@ -347,9 +347,6 @@ func (c *Component) MarshalTo(b []byte) error {
 func ParseComponents(b []byte) (*Components, error) {
 	c := &Components{}
 	if err := c.UnmarshalBinary(b); err != nil {
-		if err == io.ErrUnexpectedEOF { // TODO: ???
-			return c, nil
-		}
 		return nil, err
 	}
 	return c, nil
