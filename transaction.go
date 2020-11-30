@@ -89,7 +89,7 @@ func NewBegin(otid uint32, payload []byte) *Transaction {
 		},
 		Payload: payload,
 	}
-	binary.BigEndian.PutUint32(t.OrigTransactionID.Value, uint32(otid))
+	binary.BigEndian.PutUint32(t.OrigTransactionID.Value, otid)
 	t.SetLength()
 
 	return t
@@ -105,7 +105,7 @@ func NewEnd(otid uint32, payload []byte) *Transaction {
 		},
 		Payload: payload,
 	}
-	binary.BigEndian.PutUint32(t.DestTransactionID.Value, uint32(otid))
+	binary.BigEndian.PutUint32(t.DestTransactionID.Value, otid)
 	t.SetLength()
 
 	return t

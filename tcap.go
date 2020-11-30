@@ -134,7 +134,7 @@ func ParseBer(b []byte) ([]*TCAP, error) {
 		return nil, err
 	}
 
-	var tcaps []*TCAP
+	tcaps := make([]*TCAP, 0)
 	for _, tx := range parsed {
 		t := &TCAP{
 			Transaction: &Transaction{},

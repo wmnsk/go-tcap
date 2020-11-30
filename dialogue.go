@@ -147,8 +147,7 @@ func (d *Dialogue) SetValsFrom(berParsed *IE) error {
 	d.Length = berParsed.Length
 	for _, ie := range berParsed.IE {
 		var dpdu *IE
-		switch ie.Tag {
-		case 0x28:
+		if ie.Tag == 0x28 {
 			d.ExternalTag = ie.Tag
 			d.ExternalLength = ie.Length
 			for _, iex := range ie.IE {
@@ -161,6 +160,7 @@ func (d *Dialogue) SetValsFrom(berParsed *IE) error {
 				}
 			}
 		}
+
 		switch dpdu.Tag.Code() {
 		case AARQ, AARE, ABRT:
 			d.DialoguePDU = &DialoguePDU{
