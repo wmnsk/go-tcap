@@ -26,6 +26,40 @@ var testcases = []struct {
 	// TCAP (All)
 	// TODO: Add more patterns
 	{
+		description: "TCAP/Begin - AARQ - Invoke / MAP cancelLocation",
+		structured: tcap.NewBeginInvoke(
+			0x11111111,                       // OTID
+			tcap.DialogueAsID,                // DialogueType
+			tcap.LocationCancellationContext, // ACN
+			3,                                // ACN Version
+			0,                                // Invoke Id
+			3,                                // OpCode
+			[]byte{0x04, 0x08, 0x00, 0x01, 0x01, 0x21, 0x43, 0x65, 0x87, 0xf9}, // Payload
+		),
+		serialized: []byte{
+			// Transaction Portion
+			0x62, 0x3c, 0x48, 0x04, 0x11, 0x11, 0x11, 0x11, 0x6b, 0x1e, 0x28, 0x1c, 0x06, 0x07, 0x00, 0x11,
+			0x86, 0x05, 0x01, 0x01, 0x01,
+			// Dialogue Portion
+			0xa0, 0x11, 0x60, 0x0f, 0x80, 0x02, 0x07, 0x80, 0xa1, 0x09, 0x06, 0x07, 0x04, 0x00, 0x00, 0x01,
+			0x00, 0x02, 0x03,
+			// Component Portion
+			0x6c, 0x14, 0xa1, 0x12, 0x02, 0x01, 0x00, 0x02, 0x01, 0x03, 0x30, 0x0a, 0x04, 0x08, 0x00, 0x01,
+			0x01, 0x21, 0x43, 0x65, 0x87, 0xf9,
+		},
+		parseFunc: func(b []byte) (serializable, error) {
+			v, err := tcap.Parse(b)
+			if err != nil {
+				return nil, err
+			}
+			// clear unnecessary payload
+			v.Transaction.Payload = nil
+			v.Dialogue.SingleAsn1Type.Value = nil
+			v.Dialogue.Payload = nil
+
+			return v, nil
+		},
+	}, {
 		description: "TCAP/Begin - AARQ - Invoke",
 		structured: tcap.NewBeginInvoke(
 			0x11111111,                     // OTID
