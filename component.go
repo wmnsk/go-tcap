@@ -112,11 +112,20 @@ func NewInvoke(invID, lkID, opCode int, isLocal bool, param []byte) *Component {
 			Value: param,
 		},
 	}
+
 	if lkID > 0 {
 		c.LinkedID = &IE{
 			Tag:    NewContextSpecificPrimitiveTag(0),
 			Length: 1,
 			Value:  []byte{uint8(lkID)},
+		}
+	}
+
+	if param != nil {
+		c.Parameter = &IE{
+			// TODO: tag should not be determined here.
+			Tag:   NewUniversalConstructorTag(0x10),
+			Value: param,
 		}
 	}
 
@@ -130,6 +139,7 @@ func NewReturnResult(invID, opCode int, isLocal, isLast bool, param []byte) *Com
 	if isLast {
 		tag = ReturnResultLast
 	}
+
 	c := &Component{
 		Type: NewContextSpecificConstructorTag(tag),
 		ResultRetres: &IE{
@@ -141,10 +151,14 @@ func NewReturnResult(invID, opCode int, isLocal, isLast bool, param []byte) *Com
 			Value:  []byte{uint8(invID)},
 		},
 		OperationCode: NewOperationCode(opCode, isLocal),
-		Parameter: &IE{
+	}
+
+	if param != nil {
+		c.Parameter = &IE{
+			// TODO: tag should not be determined here.
 			Tag:   NewUniversalConstructorTag(0x10),
 			Value: param,
-		},
+		}
 	}
 
 	c.SetLength()
@@ -161,10 +175,14 @@ func NewReturnError(invID, errCode int, isLocal bool, param []byte) *Component {
 			Value:  []byte{uint8(invID)},
 		},
 		ErrorCode: NewErrorCode(errCode, isLocal),
-		Parameter: &IE{
+	}
+
+	if param != nil {
+		c.Parameter = &IE{
+			// TODO: tag should not be determined here.
 			Tag:   NewUniversalConstructorTag(0x10),
 			Value: param,
-		},
+		}
 	}
 
 	c.SetLength()
@@ -185,6 +203,14 @@ func NewReject(invID, problemType int, problemCode uint8, param []byte) *Compone
 			Length: 1,
 			Value:  []byte{problemCode},
 		},
+	}
+
+	if param != nil {
+		c.Parameter = &IE{
+			// TODO: tag should not be determined here.
+			Tag:   NewUniversalConstructorTag(0x10),
+			Value: param,
+		}
 	}
 
 	c.SetLength()
@@ -321,9 +347,6 @@ func (c *Component) MarshalTo(b []byte) error {
 func ParseComponents(b []byte) (*Components, error) {
 	c := &Components{}
 	if err := c.UnmarshalBinary(b); err != nil {
-		if err == io.ErrUnexpectedEOF {
-			return c, nil
-		}
 		return nil, err
 	}
 	return c, nil
@@ -398,6 +421,9 @@ func (c *Component) UnmarshalBinary(b []byte) error {
 		}
 		offset += c.OperationCode.MarshalLen()
 
+		if offset >= len(b) {
+			return nil
+		}
 		c.Parameter, err = ParseIE(b[offset:])
 		if err != nil {
 			return err
@@ -416,6 +442,9 @@ func (c *Component) UnmarshalBinary(b []byte) error {
 		}
 		offset += c.OperationCode.MarshalLen()
 
+		if offset >= len(b) {
+			return nil
+		}
 		c.Parameter, err = ParseIE(b[offset:])
 		if err != nil {
 			return err
@@ -427,6 +456,9 @@ func (c *Component) UnmarshalBinary(b []byte) error {
 		}
 		offset += c.ErrorCode.MarshalLen()
 
+		if offset >= len(b) {
+			return nil
+		}
 		c.Parameter, err = ParseIE(b[offset:])
 		if err != nil {
 			return err
