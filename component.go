@@ -464,6 +464,9 @@ func (c *Component) UnmarshalBinary(b []byte) error {
 //
 // It sets the value as it is if the given bytes cannot be parsed as (a set of) IE.
 func (c *Component) setParameterFromBytes(b []byte) error {
+	if b == nil {
+		return io.ErrUnexpectedEOF
+	}
 	ies, err := ParseMultiIEs(b)
 	if err != nil {
 		logf("failed to parse given bytes, building it anyway: %v", err)
