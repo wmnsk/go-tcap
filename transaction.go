@@ -260,7 +260,7 @@ func (t *Transaction) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-// SetValsFrom sets the values from IE parsed by ParseBER
+// SetValsFrom sets the values from IE parsed by ParseBER.
 func (t *Transaction) SetValsFrom(berParsed *IE) error {
 	t.Type = berParsed.Tag
 	t.Length = berParsed.Length
@@ -386,7 +386,7 @@ func (t *Transaction) AbortCause() string {
 	return ""
 }
 
-// String returns the SCCP common header values in human readable format.
+// String returns Transaction in human readable string.
 func (t *Transaction) String() string {
 	return fmt.Sprintf("{Type: %#x, Length: %d, OrigTransactionID: %v, DestTransactionID: %v, PAbortCause: %v, Payload: %x}",
 		t.Type,

@@ -464,6 +464,9 @@ func (c *Component) UnmarshalBinary(b []byte) error {
 //
 // It sets the value as it is if the given bytes cannot be parsed as (a set of) IE.
 func (c *Component) setParameterFromBytes(b []byte) error {
+	if b == nil {
+		return io.ErrUnexpectedEOF
+	}
 	ies, err := ParseMultiIEs(b)
 	if err != nil {
 		logf("failed to parse given bytes, building it anyway: %v", err)
@@ -485,7 +488,7 @@ func (c *Component) setParameterFromBytes(b []byte) error {
 	return nil
 }
 
-// SetValsFrom sets the values from IE parsed by ParseBER
+// SetValsFrom sets the values from IE parsed by ParseBER.
 func (c *Components) SetValsFrom(berParsed *IE) error {
 	c.Tag = berParsed.Tag
 	c.Length = berParsed.Length
@@ -676,7 +679,7 @@ func (c *Component) OpCode() uint8 {
 	return 0
 }
 
-// String returns the Components values in human readable format.
+// String returns Components in human readable string.
 func (c *Components) String() string {
 	return fmt.Sprintf("{Tag: %#x, Length: %d, Component: %v}",
 		c.Tag,
@@ -685,7 +688,7 @@ func (c *Components) String() string {
 	)
 }
 
-// String returns the Component values in human readable format.
+// String returns Component in human readable string.
 func (c *Component) String() string {
 	return fmt.Sprintf("{Type: %#x, Length: %d, ResultRetres: %v, InvokeID: %v, LinkedID: %v, OperationCode: %v, ErrorCode: %v, ProblemCode: %v, Parameter: %v}",
 		c.Type,

@@ -3,7 +3,6 @@
 Simple TCAP implementation in Golang
 
 [![CircleCI](https://circleci.com/gh/wmnsk/go-tcap.svg?style=shield)](https://circleci.com/gh/wmnsk/go-tcap)
-[![GolangCI](https://golangci.com/badges/github.com/wmnsk/go-tcap.svg)](https://golangci.com/r/github.com/wmnsk/go-tcap)
 [![GoDoc](https://godoc.org/github.com/wmnsk/go-tcap?status.svg)](https://godoc.org/github.com/wmnsk/go-tcap)
 [![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/wmnsk/go-tcap/blob/master/LICENSE)
 
@@ -17,19 +16,68 @@ This is still an experimental project, and currently in its very early stage of 
 
 ## Getting started
 
-The following package should be installed before getting started.
+### Prerequisites
 
-```shell-session
-go get -u github.com/pascaldekloe/goe
-go get -u github.com/pkg/errors
+go-gtp supports Go Modules. Just run go mod tidy in your project's directory to collect the required packages automatically.
+
+```
+go mod tidy
 ```
 
-If you use Go 1.11+, you can also use Go Modules.
+_This project follows [the Release Policy of Go](https://golang.org/doc/devel/release.html#policy)._
 
+### Running examples
 
-```shell-session
-GO111MODULE=on go [test | build | run | etc...]
+A sample client is available in [examples/client/](./examples/client/), which, by default, establishes SCTP/M3UA connection with a server sends a MAP cancelLocation. 
+
 ```
+Transaction Capabilities Application Part
+    begin
+        [Transaction Id: 11111111]
+        Source Transaction ID
+        oid: 0.0.17.773.1.1.1 (id-as-dialogue)
+        dialogueRequest
+        components: 1 item
+            Component: invoke (1)
+                invoke
+                    invokeID: 0
+                    opCode: localValue (0)
+                    CONSTRUCTOR
+                        CONSTRUCTOR Tag
+                        Tag: 0x00
+                        Length: 10
+                        Parameter (0x04)
+                            Tag: 0x04
+                            Length: 8
+                        Data: 00
+GSM Mobile Application
+    Component: invoke (1)
+        invoke
+            invokeID: 0
+            opCode: localValue (0)
+                localValue: cancelLocation (3)
+            identity: imsi-WithLMSI (1)
+                imsi-WithLMSI
+                    IMSI: 001010123456789
+                    [Association IMSI: 001010123456789]
+```
+
+Some parameters can be speficied from command-line arguments. Other parameters including the ones in lower layers (such as Point Code in M3UA, Global Title in SCCP, etc.) should be updated by modifying the source code.
+
+```
+$ ./client -h
+Usage of client:
+  -addr string
+        Remote IP and Port to connect to. (default "127.0.0.2:2905")
+  -opcode int
+        Operation Code in int. (default 3)
+  -otid int
+        Originating Transaction ID in uint32. (default 286331153)
+  -payload string
+        Hex representation of the payload (default "040800010121436587f9")
+```
+
+_If you are looking for a server that just can accept a SCTP/M3UA connection to receive a TCAP packet, [server example in go-m3ua project](https://github.com/wmnsk/go-m3ua/blob/master/examples/server/m3ua-server.go) would be a nice choice for you._
 
 ## Supported Features
 

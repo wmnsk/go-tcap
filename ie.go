@@ -172,7 +172,7 @@ func (i *IE) UnmarshalBinary(b []byte) error {
 
 // ParseAsBer parses given byte sequence as multiple IEs.
 //
-// DEPRECATED: use ParseAsBER instead.
+// Deprecated: use ParseAsBER instead.
 func ParseAsBer(b []byte) ([]*IE, error) {
 	return ParseAsBER(b)
 }
@@ -253,7 +253,7 @@ func (i *IE) SetLength() {
 	i.Length = uint8(len(i.Value))
 }
 
-// String returns the fields and values in human readable formai.
+// String returns IE in human readable string.
 func (i *IE) String() string {
 	return fmt.Sprintf("{Tag: %#x, Length: %d, Value: %x, IE: %v}",
 		i.Tag,
