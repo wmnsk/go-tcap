@@ -40,7 +40,7 @@ type Transaction struct {
 }
 
 // NewTransaction returns a new Transaction Portion.
-func NewTransaction(mtype, otid, dtid int, cause uint8, payload []byte) *Transaction {
+func NewTransaction(mtype int, otid, dtid uint32, cause uint8, payload []byte) *Transaction {
 	t := &Transaction{
 		Type: NewApplicationWideConstructorTag(mtype),
 		OrigTransactionID: &IE{
@@ -57,8 +57,8 @@ func NewTransaction(mtype, otid, dtid int, cause uint8, payload []byte) *Transac
 		},
 		Payload: payload,
 	}
-	binary.BigEndian.PutUint32(t.OrigTransactionID.Value, uint32(otid))
-	binary.BigEndian.PutUint32(t.DestTransactionID.Value, uint32(dtid))
+	binary.BigEndian.PutUint32(t.OrigTransactionID.Value, otid)
+	binary.BigEndian.PutUint32(t.DestTransactionID.Value, dtid)
 	t.SetLength()
 
 	return t
@@ -112,7 +112,7 @@ func NewEnd(otid uint32, payload []byte) *Transaction {
 }
 
 // NewContinue returns Continue type of Transacion Portion.
-func NewContinue(otid, dtid int, payload []byte) *Transaction {
+func NewContinue(otid, dtid uint32, payload []byte) *Transaction {
 	t := NewTransaction(
 		Continue, // Type: Continue
 		otid,     // otid
@@ -125,7 +125,7 @@ func NewContinue(otid, dtid int, payload []byte) *Transaction {
 }
 
 // NewAbort returns Abort type of Transacion Portion.
-func NewAbort(dtid int, cause uint8, payload []byte) *Transaction {
+func NewAbort(dtid uint32, cause uint8, payload []byte) *Transaction {
 	t := NewTransaction(
 		Abort,   // Type: Abort
 		0,       // otid
@@ -260,7 +260,7 @@ func (t *Transaction) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-// SetValsFrom sets the values from IE parsed by ParseBer
+// SetValsFrom sets the values from IE parsed by ParseBER
 func (t *Transaction) SetValsFrom(berParsed *IE) error {
 	t.Type = berParsed.Tag
 	t.Length = berParsed.Length
