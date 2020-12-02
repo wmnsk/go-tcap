@@ -27,7 +27,7 @@ var testcases = []struct {
 	// TODO: Add more patterns
 	{
 		description: "TCAP/Begin - AARQ - Invoke / MAP cancelLocation",
-		structured: tcap.NewBeginInvoke(
+		structured: tcap.NewBeginInvokeWithDialogue(
 			0x11111111,                       // OTID
 			tcap.DialogueAsID,                // DialogueType
 			tcap.LocationCancellationContext, // ACN
@@ -61,7 +61,7 @@ var testcases = []struct {
 		},
 	}, {
 		description: "TCAP/End - AARE - ReturnResultLast / MAP cancelLocation",
-		structured: tcap.NewEndReturnResult(
+		structured: tcap.NewEndReturnResultWithDialogue(
 			0x11111111,                       // OTID
 			tcap.DialogueAsID,                // DialogueType
 			tcap.LocationCancellationContext, // ACN
@@ -96,7 +96,7 @@ var testcases = []struct {
 		},
 	}, {
 		description: "TCAP/Begin - AARQ - Invoke",
-		structured: tcap.NewBeginInvoke(
+		structured: tcap.NewBeginInvokeWithDialogue(
 			0x11111111,                     // OTID
 			tcap.DialogueAsID,              // DialogueType
 			tcap.AnyTimeInfoEnquiryContext, // ACN
@@ -127,8 +127,38 @@ var testcases = []struct {
 			return v, nil
 		},
 	}, {
+		description: "TCAP/Continue - NoDialogue - Invoke / MAP unstructuredSS-Notify",
+		structured: tcap.NewContinueInvoke(
+			0x11111111, // OTID
+			0x22222222, // DTID
+			1,          // Invoke Id
+			61,         // OpCode
+			[]byte{
+				0x04, 0x01, 0x0f, 0x04, 0x09, 0xaa, 0x1b, 0x2e, 0x47, 0xab, 0xd9, 0x46, 0xaa, 0x11, 0x80, 0x07,
+				0x91, 0x18, 0x08, 0x11, 0x11, 0x22, 0x22,
+			}, // Payload
+		),
+		serialized: []byte{
+			// Transaction Portion
+			0x65, 0x2f, 0x48, 0x04, 0x11, 0x11, 0x11, 0x11, 0x49, 0x04, 0x22, 0x22, 0x22, 0x22,
+			// Component Portion
+			0x6c, 0x21, 0xa1, 0x1f, 0x02, 0x01, 0x01, 0x02, 0x01, 0x3d, 0x30, 0x17, 0x04, 0x01, 0x0f, 0x04,
+			0x09, 0xaa, 0x1b, 0x2e, 0x47, 0xab, 0xd9, 0x46, 0xaa, 0x11, 0x80, 0x07, 0x91, 0x18, 0x08, 0x11,
+			0x11, 0x22, 0x22,
+		},
+		parseFunc: func(b []byte) (serializable, error) {
+			v, err := tcap.Parse(b)
+			if err != nil {
+				return nil, err
+			}
+			// clear unnecessary payload
+			v.Transaction.Payload = nil
+
+			return v, nil
+		},
+	}, {
 		description: "TCAP/End - AARE - ReturnResultLast",
-		structured: tcap.NewEndReturnResult(
+		structured: tcap.NewEndReturnResultWithDialogue(
 			0x11111111,                     // OTID
 			tcap.DialogueAsID,              // DialogueType
 			tcap.AnyTimeInfoEnquiryContext, // ACN
