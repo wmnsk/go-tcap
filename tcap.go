@@ -23,10 +23,29 @@ type TCAP struct {
 }
 
 // NewBeginInvoke creates a new NewBeginInvoke.
-func NewBeginInvoke(otid uint32, dlgType, ctx, ctxver uint8, invID, opCode int, payload []byte) *TCAP {
+func NewBeginInvoke(otid uint32, invID, opCode int, payload []byte) *TCAP {
 	t := &TCAP{
 		Transaction: NewBegin(otid, []byte{}),
-		Dialogue:    NewDialogue(dlgType, 1, NewAARQ(1, ctx, ctxver), []byte{}),
+		Components:  NewComponents(NewInvoke(invID, -1, opCode, true, payload)),
+	}
+	t.SetLength()
+
+	return t
+}
+
+// NewBeginInvokeWithDialogue creates a new NewBeginInvokeWithDialogue.
+func NewBeginInvokeWithDialogue(otid uint32, dlgType, ctx, ctxver uint8, invID, opCode int, payload []byte) *TCAP {
+	t := NewBeginInvoke(otid, invID, opCode, payload)
+	t.Dialogue = NewDialogue(dlgType, 1, NewAARQ(1, ctx, ctxver), []byte{})
+	t.SetLength()
+
+	return t
+}
+
+// NewContinueInvoke creates a new NewContinueInvoke.
+func NewContinueInvoke(otid, dtid uint32, invID, opCode int, payload []byte) *TCAP {
+	t := &TCAP{
+		Transaction: NewContinue(otid, dtid, []byte{}),
 		Components:  NewComponents(NewInvoke(invID, -1, opCode, true, payload)),
 	}
 	t.SetLength()
@@ -35,12 +54,20 @@ func NewBeginInvoke(otid uint32, dlgType, ctx, ctxver uint8, invID, opCode int, 
 }
 
 // NewEndReturnResult creates a new NewEndReturnResult.
-func NewEndReturnResult(dtid uint32, dlgType, ctx, ctxver uint8, invID, opCode int, isLast bool, payload []byte) *TCAP {
+func NewEndReturnResult(dtid uint32, invID, opCode int, isLast bool, payload []byte) *TCAP {
 	t := &TCAP{
 		Transaction: NewEnd(dtid, []byte{}),
-		Dialogue:    NewDialogue(dlgType, 1, NewAARE(1, ctx, ctxver, Accepted, DialogueServiceUser, Null), []byte{}),
 		Components:  NewComponents(NewReturnResult(invID, opCode, true, isLast, payload)),
 	}
+	t.SetLength()
+
+	return t
+}
+
+// NewEndReturnResultWithDialogue creates a new NewEndReturnResultWithDialogue.
+func NewEndReturnResultWithDialogue(dtid uint32, dlgType, ctx, ctxver uint8, invID, opCode int, isLast bool, payload []byte) *TCAP {
+	t := NewEndReturnResult(dtid, invID, opCode, isLast, payload)
+	t.Dialogue = NewDialogue(dlgType, 1, NewAARE(1, ctx, ctxver, Accepted, DialogueServiceUser, Null), []byte{})
 	t.SetLength()
 
 	return t
