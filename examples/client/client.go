@@ -10,11 +10,11 @@ import (
 	"log"
 
 	"github.com/ishidawataru/sctp"
-	"github.com/wmnsk/go-gtp/utils"
 	"github.com/wmnsk/go-m3ua"
 	m3params "github.com/wmnsk/go-m3ua/messages/params"
 	"github.com/wmnsk/go-sccp"
 	"github.com/wmnsk/go-sccp/params"
+	"github.com/wmnsk/go-sccp/utils"
 	"github.com/wmnsk/go-tcap"
 )
 
