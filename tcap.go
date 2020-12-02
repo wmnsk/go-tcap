@@ -22,7 +22,7 @@ type TCAP struct {
 	Components  *Components
 }
 
-// NewBeginInvoke creates a new NewBeginInvoke.
+// NewBeginInvoke creates a new TCAP of type Transaction=Begin, Component=Invoke.
 func NewBeginInvoke(otid uint32, invID, opCode int, payload []byte) *TCAP {
 	t := &TCAP{
 		Transaction: NewBegin(otid, []byte{}),
@@ -33,7 +33,7 @@ func NewBeginInvoke(otid uint32, invID, opCode int, payload []byte) *TCAP {
 	return t
 }
 
-// NewBeginInvokeWithDialogue creates a new NewBeginInvokeWithDialogue.
+// NewBeginInvokeWithDialogue creates a new TCAP of type Transaction=Begin, Component=Invoke with Dialogue Portion.
 func NewBeginInvokeWithDialogue(otid uint32, dlgType, ctx, ctxver uint8, invID, opCode int, payload []byte) *TCAP {
 	t := NewBeginInvoke(otid, invID, opCode, payload)
 	t.Dialogue = NewDialogue(dlgType, 1, NewAARQ(1, ctx, ctxver), []byte{})
@@ -42,7 +42,7 @@ func NewBeginInvokeWithDialogue(otid uint32, dlgType, ctx, ctxver uint8, invID, 
 	return t
 }
 
-// NewContinueInvoke creates a new NewContinueInvoke.
+// NewContinueInvoke creates a new TCAP of type Transaction=Continue, Component=Invoke.
 func NewContinueInvoke(otid, dtid uint32, invID, opCode int, payload []byte) *TCAP {
 	t := &TCAP{
 		Transaction: NewContinue(otid, dtid, []byte{}),
@@ -53,7 +53,7 @@ func NewContinueInvoke(otid, dtid uint32, invID, opCode int, payload []byte) *TC
 	return t
 }
 
-// NewEndReturnResult creates a new NewEndReturnResult.
+// NewEndReturnResult creates a new TCAP of type Transaction=End, Component=ReturnResult.
 func NewEndReturnResult(dtid uint32, invID, opCode int, isLast bool, payload []byte) *TCAP {
 	t := &TCAP{
 		Transaction: NewEnd(dtid, []byte{}),
@@ -64,7 +64,7 @@ func NewEndReturnResult(dtid uint32, invID, opCode int, isLast bool, payload []b
 	return t
 }
 
-// NewEndReturnResultWithDialogue creates a new NewEndReturnResultWithDialogue.
+// NewEndReturnResultWithDialogue creates a new TCAP of type Transaction=End, Component=ReturnResult with Dialogue Portion.
 func NewEndReturnResultWithDialogue(dtid uint32, dlgType, ctx, ctxver uint8, invID, opCode int, isLast bool, payload []byte) *TCAP {
 	t := NewEndReturnResult(dtid, invID, opCode, isLast, payload)
 	t.Dialogue = NewDialogue(dlgType, 1, NewAARE(1, ctx, ctxver, Accepted, DialogueServiceUser, Null), []byte{})
@@ -108,7 +108,7 @@ func (t *TCAP) MarshalTo(b []byte) error {
 	return nil
 }
 
-// Parse parses given byte sequence as an TCAP.
+// Parse parses given byte sequence as a TCAP.
 func Parse(b []byte) (*TCAP, error) {
 	t := &TCAP{}
 	if err := t.UnmarshalBinary(b); err != nil {
@@ -117,7 +117,7 @@ func Parse(b []byte) (*TCAP, error) {
 	return t, nil
 }
 
-// UnmarshalBinary sets the values retrieved from byte sequence in an TCAP.
+// UnmarshalBinary sets the values retrieved from byte sequence in a TCAP.
 func (t *TCAP) UnmarshalBinary(b []byte) error {
 	var err error
 	var offset = 0
@@ -265,7 +265,8 @@ func (t *TCAP) AppContextName() string {
 }
 
 // AppContextNameWithVersion returns the ACN with ACN Version in string.
-// XXX - Looking for better way to return the value in the same format...
+//
+// TODO: Looking for a better way to return the value in the same format...
 func (t *TCAP) AppContextNameWithVersion() string {
 	if d := t.Dialogue; d != nil {
 		return d.Context() + "-v" + d.ContextVersion()
@@ -275,7 +276,8 @@ func (t *TCAP) AppContextNameWithVersion() string {
 }
 
 // AppContextNameOid returns the ACN with ACN Version in OID formatted string.
-// XXX - Looking for better way to return the value in the same format...
+//
+// TODO: Looking for a better way to return the value in the same format...
 func (t *TCAP) AppContextNameOid() string {
 	if r := t.Dialogue; r != nil {
 		if rp := r.DialoguePDU; rp != nil {
@@ -357,7 +359,7 @@ func (t *TCAP) LayerPayload() [][]byte {
 	return nil
 }
 
-// String returns the SCCP common header values in human readable format.
+// String returns TCAP in human readable string.
 func (t *TCAP) String() string {
 	return fmt.Sprintf("{Transaction: %v, Dialogue: %v, Components: %v}",
 		t.Transaction,

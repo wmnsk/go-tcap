@@ -494,7 +494,7 @@ func (d *DialoguePDU) parseABRTFromBytes(b []byte) error {
 	return nil
 }
 
-// MarshalLen returns the serial length of Dialogue.
+// MarshalLen returns the serial length of DialoguePDU.
 func (d *DialoguePDU) MarshalLen() int {
 	l := 2
 	switch d.Type.Code() {
@@ -700,7 +700,7 @@ func (d *DialoguePDU) ContextVersion() string {
 	return ""
 }
 
-// String returns the SCCP common header values in human readable format.
+// String returns DialoguePDU in human readable string.
 func (d *DialoguePDU) String() string {
 	return fmt.Sprintf("{Type: %#x, Length: %d, ProtocolVersion: %v, ApplicationContextName: %v, Result: %v, ResultSourceDiagnostic: %v, AbortSource: %v}",
 		d.Type,
