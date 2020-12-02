@@ -77,7 +77,7 @@ Usage of client:
         Hex representation of the payload (default "040800010121436587f9")
 ```
 
-_If you are looking for a server that just can accept a SCTP/M3UA connection, [server example in go-m3ua project](https://github.com/wmnsk/go-m3ua/blob/master/examples/server/m3ua-server.go) would be a nice choice for you._
+_If you are looking for a server that just can accept a SCTP/M3UA connection to receive a TCAP packet, [server example in go-m3ua project](https://github.com/wmnsk/go-m3ua/blob/master/examples/server/m3ua-server.go) would be a nice choice for you._
 
 ## Supported Features
 
