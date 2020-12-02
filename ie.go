@@ -163,6 +163,9 @@ func (i *IE) UnmarshalBinary(b []byte) error {
 
 	i.Tag = Tag(b[0])
 	i.Length = b[1]
+	if l < 2+int(i.Length) {
+		return io.ErrUnexpectedEOF
+	}
 	i.Value = b[2 : 2+int(i.Length)]
 	return nil
 }

@@ -172,8 +172,6 @@ func ParseBER(b []byte) ([]*TCAP, error) {
 	for i, tx := range parsed {
 		t := &TCAP{
 			Transaction: &Transaction{},
-			Dialogue:    &Dialogue{},
-			Components:  &Components{},
 		}
 
 		if err := t.Transaction.SetValsFrom(tx); err != nil {
@@ -183,10 +181,12 @@ func ParseBER(b []byte) ([]*TCAP, error) {
 		for _, dx := range tx.IE {
 			switch dx.Tag {
 			case 0x6b:
+				t.Dialogue = &Dialogue{}
 				if err := t.Dialogue.SetValsFrom(dx); err != nil {
 					return nil, err
 				}
 			case 0x6c:
+				t.Components = &Components{}
 				if err := t.Components.SetValsFrom(dx); err != nil {
 					return nil, err
 				}

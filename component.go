@@ -107,10 +107,6 @@ func NewInvoke(invID, lkID, opCode int, isLocal bool, param []byte) *Component {
 			Value:  []byte{uint8(invID)},
 		},
 		OperationCode: NewOperationCode(opCode, isLocal),
-		Parameter: &IE{
-			Tag:   NewUniversalConstructorTag(0x10),
-			Value: param,
-		},
 	}
 
 	if lkID > 0 {
@@ -122,10 +118,8 @@ func NewInvoke(invID, lkID, opCode int, isLocal bool, param []byte) *Component {
 	}
 
 	if param != nil {
-		c.Parameter = &IE{
-			// TODO: tag should not be determined here.
-			Tag:   NewUniversalConstructorTag(0x10),
-			Value: param,
+		if err := c.setParameterFromBytes(param); err != nil {
+			logf("failed to build Parameter: %v", err)
 		}
 	}
 
@@ -154,10 +148,8 @@ func NewReturnResult(invID, opCode int, isLocal, isLast bool, param []byte) *Com
 	}
 
 	if param != nil {
-		c.Parameter = &IE{
-			// TODO: tag should not be determined here.
-			Tag:   NewUniversalConstructorTag(0x10),
-			Value: param,
+		if err := c.setParameterFromBytes(param); err != nil {
+			logf("failed to build Parameter: %v", err)
 		}
 	}
 
@@ -178,10 +170,8 @@ func NewReturnError(invID, errCode int, isLocal bool, param []byte) *Component {
 	}
 
 	if param != nil {
-		c.Parameter = &IE{
-			// TODO: tag should not be determined here.
-			Tag:   NewUniversalConstructorTag(0x10),
-			Value: param,
+		if err := c.setParameterFromBytes(param); err != nil {
+			logf("failed to build Parameter: %v", err)
 		}
 	}
 
@@ -206,10 +196,8 @@ func NewReject(invID, problemType int, problemCode uint8, param []byte) *Compone
 	}
 
 	if param != nil {
-		c.Parameter = &IE{
-			// TODO: tag should not be determined here.
-			Tag:   NewUniversalConstructorTag(0x10),
-			Value: param,
+		if err := c.setParameterFromBytes(param); err != nil {
+			logf("failed to build Parameter: %v", err)
 		}
 	}
 
@@ -424,7 +412,7 @@ func (c *Component) UnmarshalBinary(b []byte) error {
 		if offset >= len(b) {
 			return nil
 		}
-		c.Parameter, err = ParseIE(b[offset:])
+		c.Parameter, err = ParseIERecursive(b[offset:])
 		if err != nil {
 			return err
 		}
@@ -445,7 +433,7 @@ func (c *Component) UnmarshalBinary(b []byte) error {
 		if offset >= len(b) {
 			return nil
 		}
-		c.Parameter, err = ParseIE(b[offset:])
+		c.Parameter, err = ParseIERecursive(b[offset:])
 		if err != nil {
 			return err
 		}
@@ -459,7 +447,7 @@ func (c *Component) UnmarshalBinary(b []byte) error {
 		if offset >= len(b) {
 			return nil
 		}
-		c.Parameter, err = ParseIE(b[offset:])
+		c.Parameter, err = ParseIERecursive(b[offset:])
 		if err != nil {
 			return err
 		}
@@ -468,6 +456,31 @@ func (c *Component) UnmarshalBinary(b []byte) error {
 		if err != nil {
 			return err
 		}
+	}
+	return nil
+}
+
+// setParameterFromBytes sets the Parameter field from given bytes.
+//
+// It sets the value as it is if the given bytes cannot be parsed as (a set of) IE.
+func (c *Component) setParameterFromBytes(b []byte) error {
+	ies, err := ParseMultiIEs(b)
+	if err != nil {
+		logf("failed to parse given bytes, building it anyway: %v", err)
+		c.Parameter = &IE{
+			// TODO: tag should not be determined here.
+			Tag:   NewUniversalConstructorTag(0x10),
+			Value: b,
+		}
+
+		return nil
+	}
+
+	c.Parameter = &IE{
+		// TODO: tag should not be determined here.
+		Tag:   NewUniversalConstructorTag(0x10),
+		Value: b,
+		IE:    ies,
 	}
 	return nil
 }
@@ -481,6 +494,7 @@ func (c *Components) SetValsFrom(berParsed *IE) error {
 			Type:   ie.Tag,
 			Length: ie.Length,
 		}
+
 		switch ie.Tag {
 		case 0xa1: // Invoke
 			for i, iex := range ie.IE {
