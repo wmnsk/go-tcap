@@ -168,7 +168,14 @@ func (i *IE) UnmarshalBinary(b []byte) error {
 }
 
 // ParseAsBer parses given byte sequence as multiple IEs.
+//
+// DEPRECATED: use ParseAsBER instead.
 func ParseAsBer(b []byte) ([]*IE, error) {
+	return ParseAsBER(b)
+}
+
+// ParseAsBER parses given byte sequence as multiple IEs.
+func ParseAsBER(b []byte) ([]*IE, error) {
 	var ies []*IE
 	for {
 		if len(b) == 0 {
@@ -223,7 +230,7 @@ func (i *IE) ParseRecursive(b []byte) error {
 	i.Value = b[2 : 2+int(i.Length)]
 
 	if i.Tag.Form() == 1 {
-		x, err := ParseAsBer(i.Value)
+		x, err := ParseAsBER(i.Value)
 		if err != nil {
 			return nil
 		}

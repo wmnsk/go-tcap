@@ -141,7 +141,7 @@ func (d *Dialogue) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-// SetValsFrom sets the values from IE parsed by ParseBer
+// SetValsFrom sets the values from IE parsed by ParseBER
 func (d *Dialogue) SetValsFrom(berParsed *IE) error {
 	d.Tag = berParsed.Tag
 	d.Length = berParsed.Length

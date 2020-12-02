@@ -472,7 +472,7 @@ func (c *Component) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-// SetValsFrom sets the values from IE parsed by ParseBer
+// SetValsFrom sets the values from IE parsed by ParseBER
 func (c *Components) SetValsFrom(berParsed *IE) error {
 	c.Tag = berParsed.Tag
 	c.Length = berParsed.Length

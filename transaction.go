@@ -260,7 +260,7 @@ func (t *Transaction) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-// SetValsFrom sets the values from IE parsed by ParseBer
+// SetValsFrom sets the values from IE parsed by ParseBER
 func (t *Transaction) SetValsFrom(berParsed *IE) error {
 	t.Type = berParsed.Tag
 	t.Length = berParsed.Length
