@@ -172,7 +172,7 @@ func (i *IE) UnmarshalBinary(b []byte) error {
 
 // ParseAsBer parses given byte sequence as multiple IEs.
 //
-// DEPRECATED: use ParseAsBER instead.
+// Deprecated: use ParseAsBER instead.
 func ParseAsBer(b []byte) ([]*IE, error) {
 	return ParseAsBER(b)
 }

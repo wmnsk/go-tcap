@@ -156,7 +156,7 @@ func (t *TCAP) UnmarshalBinary(b []byte) error {
 
 // ParseBer parses given byte sequence as a TCAP.
 //
-// DEPRECATED: use ParseBER instead.
+// Deprecated: use ParseBER instead.
 func ParseBer(b []byte) ([]*TCAP, error) {
 	return ParseBER(b)
 }
