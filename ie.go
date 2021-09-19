@@ -121,8 +121,10 @@ func (i *IE) MarshalTo(b []byte) error {
 	}
 
 	b[0] = uint8(i.Tag)
-	b[1] = i.Length
-	copy(b[2:i.MarshalLen()], i.Value)
+	var offset = writeLength( b , i.Length)
+	if(i.Value != nil){
+		copy(b[offset:i.MarshalLen()], i.Value)
+	}
 	return nil
 }
 
@@ -157,16 +159,17 @@ func ParseIE(b []byte) (*IE, error) {
 // UnmarshalBinary sets the values retrieved from byte sequence in an IE.
 func (i *IE) UnmarshalBinary(b []byte) error {
 	l := len(b)
+	var offset int = 2
 	if l < 3 {
 		return io.ErrUnexpectedEOF
 	}
 
 	i.Tag = Tag(b[0])
-	i.Length = b[1]
-	if l < 2+int(i.Length) {
+	i.Length, offset = readLength(b)
+	if l < offset+int(i.Length) {
 		return io.ErrUnexpectedEOF
 	}
-	i.Value = b[2 : 2+int(i.Length)]
+	i.Value = b[offset : offset+int(i.Length)]
 	return nil
 }
 
@@ -221,16 +224,17 @@ func ParseIERecursive(b []byte) (*IE, error) {
 // ParseRecursive sets the values retrieved from byte sequence in an IE.
 func (i *IE) ParseRecursive(b []byte) error {
 	l := len(b)
+	var offset int = 2
 	if l < 2 {
 		return io.ErrUnexpectedEOF
 	}
 
 	i.Tag = Tag(b[0])
-	i.Length = b[1]
-	if int(i.Length)+2 > len(b) {
+	i.Length, offset = readLength(b)
+	if int(i.Length)+offset > len(b) {
 		return nil
 	}
-	i.Value = b[2 : 2+int(i.Length)]
+	i.Value = b[offset : offset+int(i.Length)]
 
 	if i.Tag.Form() == 1 {
 		x, err := ParseAsBER(i.Value)
@@ -245,7 +249,11 @@ func (i *IE) ParseRecursive(b []byte) error {
 
 // MarshalLen returns the serial length of IE.
 func (i *IE) MarshalLen() int {
-	return 2 + len(i.Value)
+	if(i.Value != nil && len(i.Value) > 0){
+		return handleMarshalLen(uint8(len(i.Value)), len(i.Value))
+	} else {
+		return handleMarshalLen(i.Length, len(i.Value))
+	}
 }
 
 // SetLength sets the length in Length field.

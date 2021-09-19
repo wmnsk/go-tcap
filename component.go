@@ -235,10 +235,11 @@ func (c *Components) MarshalBinary() ([]byte, error) {
 // MarshalTo puts the byte sequence in the byte array given as b.
 func (c *Components) MarshalTo(b []byte) error {
 	b[0] = uint8(c.Tag)
-	b[1] = c.Length
+	//b[1] = c.Length
+	var offset = writeLength( b , c.Length)
 
 	for _, comp := range c.Component {
-		if err := comp.MarshalTo(b[2 : 2+comp.MarshalLen()]); err != nil {
+		if err := comp.MarshalTo(b[offset : offset+comp.MarshalLen()]); err != nil {
 			return err
 		}
 	}
@@ -257,9 +258,9 @@ func (c *Component) MarshalBinary() ([]byte, error) {
 // MarshalTo puts the byte sequence in the byte array given as b.
 func (c *Component) MarshalTo(b []byte) error {
 	b[0] = uint8(c.Type)
-	b[1] = c.Length
 
-	var offset = 2
+	var offset = writeLength( b , c.Length)
+
 	if field := c.InvokeID; field != nil {
 		if err := field.MarshalTo(b[offset : offset+field.MarshalLen()]); err != nil {
 			return err
@@ -347,9 +348,9 @@ func (c *Components) UnmarshalBinary(b []byte) error {
 	}
 
 	c.Tag = Tag(b[0])
-	c.Length = b[1]
-
 	var offset = 2
+	c.Length, offset = readLength(b)
+
 	for {
 		if len(b) < 2 {
 			break
@@ -361,7 +362,7 @@ func (c *Components) UnmarshalBinary(b []byte) error {
 		}
 		c.Component = append(c.Component, comp)
 
-		if len(b[offset:]) == int(comp.Length)+2 {
+		if len(b[offset:]) == handleMarshalLen(uint8(int(comp.Length)), int(comp.Length)) { // int(comp.Length)+2
 			break
 		}
 		b = b[offset+comp.MarshalLen()-2:]
@@ -384,10 +385,10 @@ func (c *Component) UnmarshalBinary(b []byte) error {
 		return io.ErrUnexpectedEOF
 	}
 	c.Type = Tag(b[0])
-	c.Length = b[1]
+	var offset = 2
+	c.Length, offset = readLength(b)
 
 	var err error
-	var offset = 2
 	c.InvokeID, err = ParseIE(b[offset:])
 	if err != nil {
 		return err
@@ -554,16 +555,17 @@ func (c *Components) SetValsFrom(berParsed *IE) error {
 
 // MarshalLen returns the serial length of Components.
 func (c *Components) MarshalLen() int {
-	var l = 2
+	var l = 0
 	for _, comp := range c.Component {
 		l += comp.MarshalLen()
 	}
+	l += handleMarshalLen(uint8(l), 0)
 	return l
 }
 
 // MarshalLen returns the serial length of Component.
 func (c *Component) MarshalLen() int {
-	var l = 2 + c.InvokeID.MarshalLen()
+	var l = c.InvokeID.MarshalLen() // handleMarshalLen(c.Length , c.InvokeID.MarshalLen())
 	switch c.Type.Code() {
 	case Invoke:
 		if field := c.LinkedID; field != nil {
@@ -597,7 +599,7 @@ func (c *Component) MarshalLen() int {
 			l += field.MarshalLen()
 		}
 	}
-	return l
+	return handleMarshalLen(uint8(l), l)
 }
 
 // SetLength sets the length in Length field.
@@ -640,6 +642,8 @@ func (c *Component) SetLength() {
 	}
 	if field := c.ResultRetres; field != nil {
 		field.Length = uint8(l)
+		//field.SetLength()
+		//l += c.ResultRetres.MarshalLen()
 	}
 	c.Length = uint8(c.MarshalLen() - 2)
 }

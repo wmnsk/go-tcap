@@ -149,9 +149,8 @@ func (t *Transaction) MarshalBinary() ([]byte, error) {
 // MarshalTo puts the byte sequence in the byte array given as b.
 func (t *Transaction) MarshalTo(b []byte) error {
 	b[0] = uint8(t.Type)
-	b[1] = t.Length
+	var offset = writeLength( b , t.Length)
 
-	var offset = 2
 	switch t.Type.Code() {
 	case Unidirectional:
 		break
@@ -214,10 +213,10 @@ func ParseTransaction(b []byte) (*Transaction, error) {
 // UnmarshalBinary sets the values retrieved from byte sequence in an Transaction.
 func (t *Transaction) UnmarshalBinary(b []byte) error {
 	t.Type = Tag(b[0])
-	t.Length = b[1]
+	var offset = 2
+	t.Length, offset = readLength(b)
 
 	var err error
-	var offset = 2
 	switch t.Type.Code() {
 	case Unidirectional:
 		break
@@ -279,7 +278,7 @@ func (t *Transaction) SetValsFrom(berParsed *IE) error {
 
 // MarshalLen returns the serial length of Transaction.
 func (t *Transaction) MarshalLen() int {
-	l := 2
+	l := 0
 	switch t.Type.Code() {
 	case Unidirectional:
 		break
@@ -306,7 +305,12 @@ func (t *Transaction) MarshalLen() int {
 			l += field.MarshalLen()
 		}
 	}
-	return l + len(t.Payload)
+	if(t.Payload != nil && len(t.Payload) > 0){
+		return handleMarshalLen(uint8(l+len(t.Payload)), l + len(t.Payload))
+	} else {
+		return handleMarshalLen(uint8(l+int(t.Length)), l + len(t.Payload))
+	}
+
 }
 
 // SetLength sets the length in Length field.
