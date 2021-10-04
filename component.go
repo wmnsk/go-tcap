@@ -207,7 +207,7 @@ func NewReject(invID, problemType int, problemCode uint8, param []byte) *Compone
 
 // NewOperationCode returns a Operation Code.
 func NewOperationCode(code int, isLocal bool) *IE {
-	var tag = 4
+	var tag = 6
 	if isLocal {
 		tag = 2
 	}
