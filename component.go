@@ -207,7 +207,7 @@ func NewReject(invID, problemType int, problemCode uint8, param []byte) *Compone
 
 // NewOperationCode returns a Operation Code.
 func NewOperationCode(code int, isLocal bool) *IE {
-	var tag = 4
+	var tag = 6
 	if isLocal {
 		tag = 2
 	}
@@ -237,10 +237,13 @@ func (c *Components) MarshalTo(b []byte) error {
 	b[0] = uint8(c.Tag)
 	b[1] = c.Length
 
+	cursor := 2
 	for _, comp := range c.Component {
-		if err := comp.MarshalTo(b[2 : 2+comp.MarshalLen()]); err != nil {
+		compLen := comp.MarshalLen()
+		if err := comp.MarshalTo(b[cursor : cursor+compLen]); err != nil {
 			return err
 		}
+		cursor += compLen
 	}
 	return nil
 }
