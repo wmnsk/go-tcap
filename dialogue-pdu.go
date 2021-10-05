@@ -16,6 +16,7 @@ const (
 	AARQ = iota
 	AARE
 	ABRT
+	ABRT2 = 4
 	// AUDT = 0
 )
 
@@ -403,6 +404,8 @@ func (d *DialoguePDU) UnmarshalBinary(b []byte) error {
 		return d.parseAAREFromBytes(b)
 	case ABRT:
 		return d.parseABRTFromBytes(b)
+	case ABRT2:
+		return d.parseABRTFromBytes(b)
 	default:
 		return &InvalidCodeError{Code: d.Type.Code()}
 	}
@@ -584,6 +587,18 @@ func (d *DialoguePDU) Version() string {
 		return fmt.Sprintf("%d", d.ProtocolVersion.Value[len(d.ProtocolVersion.Value)-1]>>7)
 	}
 	return ""
+}
+
+// Version returns Protocol Version in string.
+func (d *DialoguePDU) AbortSourceString() string {
+	switch d.AbortSource.Value[0] {
+	case 0:
+		return "User"
+	case 1:
+		return "Provider"
+	default:
+		return "Unknown Abort Source"
+	}
 }
 
 // Context returns the Context part of ApplicationContextName in string.
