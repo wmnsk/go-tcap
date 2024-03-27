@@ -194,7 +194,7 @@ func (d *Dialogue) MarshalLen() int {
 		l += field.MarshalLen()
 	}
 	if field := d.DialoguePDU; field != nil {
-		l += field.MarshalLen() + 2 // 2 = singleAsn1Type IE Header
+		l += field.MarshalLen() + 2 // 2 = SingleAsn1Type IE Header
 	}
 
 	return l + len(d.Payload)
@@ -215,7 +215,7 @@ func (d *Dialogue) SetLength() {
 
 // String returns the SCCP common header values in human readable format.
 func (d *Dialogue) String() string {
-	return fmt.Sprintf("{Tag: %#x, Length: %d, ExternalTag: %x, ExternalLength: %d, ObjectIdentifier: %v, singleAsn1Type: %v, DialoguePDU: %v, Payload: %x}",
+	return fmt.Sprintf("{Tag: %#x, Length: %d, ExternalTag: %x, ExternalLength: %d, ObjectIdentifier: %v, SingleAsn1Type: %v, DialoguePDU: %v, Payload: %x}",
 		d.Tag,
 		d.Length,
 		d.ExternalTag,
