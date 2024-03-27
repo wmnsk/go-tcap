@@ -388,7 +388,7 @@ func ParseDialoguePDU(b []byte) (*DialoguePDU, error) {
 }
 
 // UnmarshalBinary sets the values retrieved from byte sequence in an DialoguePDU.
-func (d *DialoguePDU) UnmarshalBinary(b []byte) error {
+func (d *DialoguePDU) UnmarshalBinary(b []byte) (err error) {
 	if len(b) < 4 {
 		return io.ErrUnexpectedEOF
 	}
@@ -398,14 +398,25 @@ func (d *DialoguePDU) UnmarshalBinary(b []byte) error {
 
 	switch d.Type.Code() {
 	case AARQ:
-		return d.parseAARQFromBytes(b)
+		err = d.parseAARQFromBytes(b)
 	case AARE:
-		return d.parseAAREFromBytes(b)
+		err = d.parseAAREFromBytes(b)
 	case ABRT:
-		return d.parseABRTFromBytes(b)
+		err = d.parseABRTFromBytes(b)
 	default:
-		return &InvalidCodeError{Code: d.Type.Code()}
+		err = &InvalidCodeError{Code: d.Type.Code()}
 	}
+
+	if err != nil {
+		return
+	}
+
+	d.SetLength()
+	if b[1] != d.Length {
+		return fmt.Errorf("Decoded Length is not equal to DialoguePDU Length, got %d, expected %d", d.Length, b[1])
+	}
+
+	return nil
 }
 
 func (d *DialoguePDU) parseAARQFromBytes(b []byte) error {
@@ -702,7 +713,7 @@ func (d *DialoguePDU) ContextVersion() string {
 
 // String returns DialoguePDU in human readable string.
 func (d *DialoguePDU) String() string {
-	return fmt.Sprintf("{Type: %#x, Length: %d, ProtocolVersion: %v, ApplicationContextName: %v, Result: %v, ResultSourceDiagnostic: %v, AbortSource: %v}",
+	return fmt.Sprintf("{Type: %#x, Length: %d, ProtocolVersion: %v, ApplicationContextName: %v, Result: %v, ResultSourceDiagnostic: %v, AbortSource: %v, UserInformation: %v}",
 		d.Type,
 		d.Length,
 		d.ProtocolVersion,
@@ -710,5 +721,6 @@ func (d *DialoguePDU) String() string {
 		d.Result,
 		d.ResultSourceDiagnostic,
 		d.AbortSource,
+		d.UserInformation,
 	)
 }

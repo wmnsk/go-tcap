@@ -79,13 +79,15 @@ func (d *Dialogue) MarshalTo(b []byte) error {
 	}
 
 	if field := d.SingleAsn1Type; field != nil {
-		if err := field.MarshalTo(b[offset : offset+field.MarshalLen()]); err != nil {
-			return err
-		}
-		offset += field.MarshalLen()
-	}
+		if field := d.DialoguePDU; field != nil {
+			d.SingleAsn1Type.Value = make([]byte, d.DialoguePDU.MarshalLen())
 
-	if field := d.DialoguePDU; field != nil {
+			if err := d.DialoguePDU.MarshalTo(d.SingleAsn1Type.Value); err != nil {
+				return err
+			}
+		}
+
+		d.SingleAsn1Type.SetLength()
 		if err := field.MarshalTo(b[offset : offset+field.MarshalLen()]); err != nil {
 			return err
 		}
@@ -93,6 +95,7 @@ func (d *Dialogue) MarshalTo(b []byte) error {
 	}
 
 	copy(b[offset:], d.Payload)
+
 	return nil
 }
 
@@ -190,19 +193,22 @@ func (d *Dialogue) MarshalLen() int {
 	if field := d.ObjectIdentifier; field != nil {
 		l += field.MarshalLen()
 	}
-	if field := d.SingleAsn1Type; field != nil {
-		l += field.MarshalLen()
-	}
 	if field := d.DialoguePDU; field != nil {
-		l += field.MarshalLen()
+		l += field.MarshalLen() + 2 // 2 = SingleAsn1Type IE Header
 	}
-	l += len(d.Payload)
 
-	return l
+	return l + len(d.Payload)
 }
 
 // SetLength sets the length in Length field.
 func (d *Dialogue) SetLength() {
+	if field := d.ObjectIdentifier; field != nil {
+		d.ObjectIdentifier.SetLength()
+	}
+	if field := d.DialoguePDU; field != nil {
+		d.DialoguePDU.SetLength()
+	}
+
 	d.Length = uint8(d.MarshalLen() - 2)
 	d.ExternalLength = uint8(d.MarshalLen() - 4)
 }
