@@ -124,6 +124,7 @@ func (t *TCAP) UnmarshalBinary(b []byte) error {
 	var offset = 0
 
 	t.Transaction, err = ParseTransaction(b[offset:])
+	transactionLength := t.Transaction.Length
 	if err != nil {
 		return err
 	}
@@ -140,16 +141,29 @@ func (t *TCAP) UnmarshalBinary(b []byte) error {
 		if len(t.Dialogue.Payload) == 0 {
 			return nil
 		}
+		// Dialogue is not a Transaction Payload
+		// We have to remove Dialogue from the Payload
+		// Or mashaling an unmarshaled message will write back two times the Dialogue
+		t.Transaction.Payload = t.Transaction.Payload[t.Dialogue.MarshalLen():]
 
 		t.Components, err = ParseComponents(t.Dialogue.Payload)
 		if err != nil {
 			return err
 		}
+
+		// Same as above but Components inside Dialogue Payload
+		t.Dialogue.Payload = t.Dialogue.Payload[t.Components.MarshalLen():]
 	case 0x6c:
 		t.Components, err = ParseComponents(t.Transaction.Payload)
 		if err != nil {
 			return err
 		}
+		t.Transaction.Payload = t.Transaction.Payload[t.Components.MarshalLen():]
+	}
+
+	t.SetLength()
+	if transactionLength != t.Transaction.Length {
+		return fmt.Errorf("decoded Length is not equal to Transaction Length, got %d, expected %d", t.Transaction.Length, transactionLength)
 	}
 
 	return nil
