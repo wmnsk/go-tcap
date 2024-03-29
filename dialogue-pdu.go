@@ -7,8 +7,6 @@ package tcap
 import (
 	"fmt"
 	"io"
-
-	"github.com/pkg/errors"
 )
 
 // Code definitions.
@@ -266,11 +264,11 @@ func NewAUDT(protover int, context, contextver uint8, userinfo ...*IE) *Dialogue
 }
 */
 
-// MarshalBinary returns the byte sequence generated from a Dialogue instance.
+// MarshalBinary returns the byte sequence generated from a DialoguePDU.
 func (d *DialoguePDU) MarshalBinary() ([]byte, error) {
 	b := make([]byte, d.MarshalLen())
 	if err := d.MarshalTo(b); err != nil {
-		return nil, errors.Wrap(err, "failed to marshal DialoguePDU:")
+		return nil, fmt.Errorf("failed to marshal DialoguePDU: %w", err)
 	}
 	return b, nil
 }

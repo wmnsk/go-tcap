@@ -7,8 +7,6 @@ package tcap
 import (
 	"fmt"
 	"io"
-
-	"github.com/pkg/errors"
 )
 
 // Dialogue OID: Dialogue-As-ID and Unidialogue-As-Id.
@@ -51,11 +49,11 @@ func NewDialogue(oid, ver uint8, pdu *DialoguePDU, payload []byte) *Dialogue {
 	return d
 }
 
-// MarshalBinary returns the byte sequence generated from a Dialogue instance.
+// MarshalBinary returns the byte sequence generated from a Dialogue.
 func (d *Dialogue) MarshalBinary() ([]byte, error) {
 	b := make([]byte, d.MarshalLen())
 	if err := d.MarshalTo(b); err != nil {
-		return nil, errors.Wrap(err, "failed to serialize Dialogue:")
+		return nil, fmt.Errorf("failed to marshal Dialogue: %w", err)
 	}
 	return b, nil
 }
