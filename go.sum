@@ -16,5 +16,4 @@ github.com/wmnsk/go-m3ua v0.1.8 h1:l+Mx+fPIEJsHv4HILN0/gILfPcJtfAq8mtYJt9guQL4=
 github.com/wmnsk/go-m3ua v0.1.8/go.mod h1:9Vf2jri+jTlrqYlhzN8lLbaMZs0YO4SwJ0GZTkzTpe4=
 github.com/wmnsk/go-sccp v0.0.1 h1:Gew9BTUvNlM76IPEdAWWr4vTU3w9le9fZ+75nNY7Nck=
 github.com/wmnsk/go-sccp v0.0.1/go.mod h1:BYI89D0daaIbA0VXv0brouzVEKUflHVZPut7ZsjPytI=
-golang.org/x/xerrors v0.0.0-20191204190536-9bdfabe68543 h1:E7g+9GITq07hpfrRu66IVDexMakfv52eLZ2CXBWiKr4=
 golang.org/x/xerrors v0.0.0-20191204190536-9bdfabe68543/go.mod h1:I/5z698sn9Ka8TeJc9MKroUUfqBBauWjQqLJ2OPfmY0=

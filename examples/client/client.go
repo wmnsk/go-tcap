@@ -1,3 +1,7 @@
+// Copyright 2019-2024 go-tcap authors. All rights reserved.
+// Use of this source code is governed by a MIT-style license that can be
+// found in the LICENSE file.
+
 // Command client creates Begin/Invoke packet with given parameters, and send it to the specified address.
 // By default, it sends MAP cancelLocation. The parameters in the lower layers(SCTP/M3UA/SCCP) cannot be
 // specified from command-line arguments. Update this source code itself to update them.

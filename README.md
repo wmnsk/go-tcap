@@ -1,16 +1,16 @@
 # go-tcap
 
-Simple TCAP implementation in Golang
+Simple TCAP implementation in the Go Programming Language.
 
-[![CircleCI](https://circleci.com/gh/wmnsk/go-tcap.svg?style=shield)](https://circleci.com/gh/wmnsk/go-tcap)
-[![GoDoc](https://godoc.org/github.com/wmnsk/go-tcap?status.svg)](https://godoc.org/github.com/wmnsk/go-tcap)
+![CI status](https://github.com/wmnsk/go-tcap/actions/workflows/go.yml/badge.svg)
+[![Go Reference](https://pkg.go.dev/badge/github.com/wmnsk/go-tcap.svg)](https://pkg.go.dev/github.com/wmnsk/go-tcap)
 [![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/wmnsk/go-tcap/blob/master/LICENSE)
 
-Package tcap provides simple and painless handling of TCAP(Transaction Capabilities Application Part) in SS7/SIGTRAN protocol stack, implemented in the Go Programming Language.
-
-Though TCAP is ASN.1-based protocol, this implementation does not use any ASN.1 parser. That makes this implementation flexible enough to create arbitrary payload with any combinations, which is useful for testing.
+Package tcap provides simple and painless handling of TCAP (Transaction Capabilities Application Part) in SS7/SIGTRAN protocol stack, intended for Go developers to use.
 
 ## Disclaimer
+
+Though TCAP is an ASN.1-based protocol, this implementation does not use any ASN.1 parser. That makes this implementation flexible enough to create arbitrary payload with any combinations, which is useful for testing while it also means that many of the features in TCAP are not supported yet.
 
 This is still an experimental project, and currently in its very early stage of development. Any part of implementations(including exported APIs) may be changed before released as v1.0.0.
 
@@ -18,17 +18,13 @@ This is still an experimental project, and currently in its very early stage of 
 
 ### Prerequisites
 
-go-gtp supports Go Modules. Just run go mod tidy in your project's directory to collect the required packages automatically.
-
-```
-go mod tidy
-```
+Run `go mod tidy` in your project's directory to collect the required packages automatically.
 
 _This project follows [the Release Policy of Go](https://golang.org/doc/devel/release.html#policy)._
 
 ### Running examples
 
-A sample client is available in [examples/client/](./examples/client/), which, by default, establishes SCTP/M3UA connection with a server sends a MAP cancelLocation. 
+A sample client is available in [examples/client/](./examples/client/), which, by default, establishes SCTP/M3UA connection with a server sends a MAP cancelLocation.
 
 ```
 Transaction Capabilities Application Part
@@ -139,9 +135,7 @@ _If you are looking for a server that just can accept a SCTP/M3UA connection to 
 
 ## Author(s)
 
-Yoshiyuki Kurauchi ([Website](https://wmnsk.com/) / [Twitter](https://twitter.com/wmnskdmms))
-
-I'm always open to welcome co-authors! Please feel free to talk to me.
+Yoshiyuki Kurauchi ([Website](https://wmnsk.com/))
 
 ## LICENSE
 
