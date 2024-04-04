@@ -700,7 +700,7 @@ func (d *DialoguePDU) ContextVersion() string {
 
 // String returns DialoguePDU in human readable string.
 func (d *DialoguePDU) String() string {
-	return fmt.Sprintf("{Type: %#x, Length: %d, ProtocolVersion: %v, ApplicationContextName: %v, Result: %v, ResultSourceDiagnostic: %v, AbortSource: %v}",
+	return fmt.Sprintf("{Type: %#x, Length: %d, ProtocolVersion: %v, ApplicationContextName: %v, Result: %v, ResultSourceDiagnostic: %v, AbortSource: %v, UserInformation: %v}",
 		d.Type,
 		d.Length,
 		d.ProtocolVersion,
@@ -708,5 +708,6 @@ func (d *DialoguePDU) String() string {
 		d.Result,
 		d.ResultSourceDiagnostic,
 		d.AbortSource,
+		d.UserInformation,
 	)
 }

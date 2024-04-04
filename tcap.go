@@ -114,6 +114,7 @@ func Parse(b []byte) (*TCAP, error) {
 	if err := t.UnmarshalBinary(b); err != nil {
 		return nil, err
 	}
+
 	return t, nil
 }
 

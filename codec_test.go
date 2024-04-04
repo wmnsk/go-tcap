@@ -288,6 +288,44 @@ var testcases = []struct {
 			return v, nil
 		},
 	}, {
+		description: "Dialogue/AARQ/UserInformation",
+		structured: tcap.NewDialogue(
+			1, 1, // OID, Version
+			tcap.NewAARQ(
+				// Version, Context, ContextVersion
+				1, tcap.AnyTimeInfoEnquiryContext, 3,
+				tcap.NewIE(0xBE, []byte{0xde, 0xad, 0xbe, 0xef}),
+			),
+			[]byte{0xde, 0xad, 0xbe, 0xef},
+		),
+		serialized: []byte{
+			0x6b, 0x28, 0x28, 0x26, 0x06, 0x07, 0x00, 0x11, 0x86, 0x05, 0x01, 0x01, 0x01, 0xa0, 0x17, 0x60,
+			0x15, 0x80, 0x02, 0x07, 0x80, 0xa1, 0x09, 0x06, 0x07, 0x04, 0x00, 0x00, 0x01, 0x00, 0x1d, 0x03,
+			0xbe, 0x04, 0xde, 0xad, 0xbe, 0xef, 0xde, 0xad, 0xbe, 0xef,
+		},
+		parseFunc: func(b []byte) (serializable, error) {
+			v, err := tcap.ParseDialogue(b)
+			if err != nil {
+				return nil, err
+			}
+
+			b, err = v.MarshalBinary()
+			if err != nil {
+				return nil, err
+			}
+
+			// Purposely do not clean v.SingleAsn1Type.Value the first time
+
+			v, err = tcap.ParseDialogue(b)
+			if err != nil {
+				return nil, err
+			}
+
+			v.SingleAsn1Type.Value = nil
+
+			return v, nil
+		},
+	}, {
 		description: "Dialogue/AARE",
 		structured: tcap.NewDialogue(
 			1, 1, // OID, Version
