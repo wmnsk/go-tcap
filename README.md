@@ -3,6 +3,7 @@
 Simple TCAP implementation in the Go Programming Language.
 
 ![CI status](https://github.com/wmnsk/go-tcap/actions/workflows/go.yml/badge.svg)
+[![golangci-lint](https://github.com/wmnsk/go-tcap/actions/workflows/golangci-lint.yml/badge.svg)](https://github.com/wmnsk/go-tcap/actions/workflows/golangci-lint.yml)
 [![Go Reference](https://pkg.go.dev/badge/github.com/wmnsk/go-tcap.svg)](https://pkg.go.dev/github.com/wmnsk/go-tcap)
 [![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/wmnsk/go-tcap/blob/master/LICENSE)
 
