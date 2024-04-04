@@ -116,13 +116,24 @@ func (i *IE) MarshalBinary() ([]byte, error) {
 
 // MarshalTo puts the byte sequence in the byte array given as b.
 func (i *IE) MarshalTo(b []byte) error {
+	var offset = 2
+
 	if len(b) < 2 {
 		return io.ErrUnexpectedEOF
 	}
 
 	b[0] = uint8(i.Tag)
 	b[1] = i.Length
-	copy(b[2:i.MarshalLen()], i.Value)
+
+	offset += copy(b[offset:], i.Value)
+
+	for _, childIE := range i.IE {
+		if err := childIE.MarshalTo(b[offset : offset+childIE.MarshalLen()]); err != nil {
+			return err
+		}
+		offset += childIE.MarshalLen()
+	}
+
 	return nil
 }
 
@@ -167,6 +178,11 @@ func (i *IE) UnmarshalBinary(b []byte) error {
 		return io.ErrUnexpectedEOF
 	}
 	i.Value = b[2 : 2+int(i.Length)]
+
+	i.SetLength()
+	if b[1] != i.Length {
+		return fmt.Errorf("decoded Length is not equal to IE Length, got %d, expected %d", i.Length, b[1])
+	}
 	return nil
 }
 
@@ -228,7 +244,7 @@ func (i *IE) ParseRecursive(b []byte) error {
 	i.Tag = Tag(b[0])
 	i.Length = b[1]
 	if int(i.Length)+2 > len(b) {
-		return nil
+		return io.ErrUnexpectedEOF
 	}
 	i.Value = b[2 : 2+int(i.Length)]
 
@@ -238,19 +254,29 @@ func (i *IE) ParseRecursive(b []byte) error {
 			return nil
 		}
 		i.IE = append(i.IE, x...)
-	}
 
+		i.Value = b[2+int(i.Length):]
+	}
 	return nil
 }
 
 // MarshalLen returns the serial length of IE.
 func (i *IE) MarshalLen() int {
-	return 2 + len(i.Value)
+	l := 2
+	for _, childIE := range i.IE {
+		l += childIE.MarshalLen()
+	}
+
+	return l + len(i.Value)
 }
 
 // SetLength sets the length in Length field.
 func (i *IE) SetLength() {
-	i.Length = uint8(len(i.Value))
+	for _, childIE := range i.IE {
+		childIE.SetLength()
+	}
+
+	i.Length = uint8(i.MarshalLen() - 2)
 }
 
 // String returns IE in human readable string.

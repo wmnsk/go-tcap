@@ -412,6 +412,33 @@ var testcases = []struct {
 		serialized:  []byte{0x48, 0x04, 0xde, 0xad, 0xbe, 0xef},
 		parseFunc:   func(b []byte) (serializable, error) { return tcap.ParseIE(b) },
 	},
+	{
+		description: "IE/UserInformation",
+		structured: func() *tcap.IE {
+			dialoguePDU := tcap.NewIE(0xa0, []byte{0xde, 0xad, 0xbe, 0xef})
+
+			singleAsn1Type := tcap.NewIE(0xa0, []byte{})
+			singleAsn1Type.IE = []*tcap.IE{dialoguePDU}
+
+			directReference := tcap.NewIE(0x06, []byte{04, 00, 00, 01, 01, 01, 01})
+
+			userInfoItem := tcap.NewIE(0x28, []byte{})
+			userInfoItem.IE = []*tcap.IE{directReference, singleAsn1Type}
+
+			userInfo := tcap.NewIE(0xBE, []byte{})
+			userInfo.IE = []*tcap.IE{userInfoItem}
+
+			userInfo.SetLength()
+
+			return userInfo
+		}(),
+		serialized: []byte{
+			0xbe, 0x13, 0x28, 0x11, 0x06, 0x07, 0x04,
+			0x00, 0x00, 0x01, 0x01, 0x01, 0x01, 0xa0,
+			0x06, 0xa0, 0x04, 0xde, 0xad, 0xbe, 0xef,
+		},
+		parseFunc: func(b []byte) (serializable, error) { return tcap.ParseIERecursive(b) },
+	},
 }
 
 func TestCodec(t *testing.T) {

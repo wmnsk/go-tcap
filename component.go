@@ -369,6 +369,12 @@ func (c *Components) UnmarshalBinary(b []byte) error {
 		}
 		b = b[offset+comp.MarshalLen()-2:]
 	}
+
+	c.SetLength()
+	if b[1] != c.Length {
+		return fmt.Errorf("decoded Length is not equal to Components Length, got %d, expected %d", c.Length, b[1])
+	}
+
 	return nil
 }
 
@@ -388,6 +394,7 @@ func (c *Component) UnmarshalBinary(b []byte) error {
 	}
 	c.Type = Tag(b[0])
 	c.Length = b[1]
+	expectedLength := b[1]
 
 	var err error
 	var offset = 2
@@ -434,12 +441,16 @@ func (c *Component) UnmarshalBinary(b []byte) error {
 		offset += c.OperationCode.MarshalLen()
 
 		if offset >= len(b) {
+			c.ResultRetres.Value = []byte{}
 			return nil
 		}
 		c.Parameter, err = ParseIERecursive(b[offset:])
 		if err != nil {
 			return err
 		}
+		offset += c.Parameter.MarshalLen()
+		c.ResultRetres.Value = c.ResultRetres.Value[offset:]
+
 	case ReturnError:
 		c.ErrorCode, err = ParseIE(b[offset:])
 		if err != nil {
@@ -460,6 +471,12 @@ func (c *Component) UnmarshalBinary(b []byte) error {
 			return err
 		}
 	}
+
+	c.SetLength()
+	if expectedLength != c.Length {
+		return fmt.Errorf("decoded Length is not equal to Component Length, got %d, expected %d", c.Length, b[1])
+	}
+
 	return nil
 }
 
@@ -478,14 +495,13 @@ func (c *Component) setParameterFromBytes(b []byte) error {
 			Tag:   NewUniversalConstructorTag(0x10),
 			Value: b,
 		}
-
 		return nil
 	}
 
 	c.Parameter = &IE{
 		// TODO: tag should not be determined here.
 		Tag:   NewUniversalConstructorTag(0x10),
-		Value: b,
+		Value: []byte{}, // If we were able to parse the IEs, do not set value
 		IE:    ies,
 	}
 	return nil
