@@ -1,15 +1,10 @@
-github.com/google/go-cmp v0.3.0/go.mod h1:8QqcDgzrUqlUb/G2PQTWiueGozuR1884gddMywk6iLU=
 github.com/google/go-cmp v0.5.9 h1:O2Tfq5qg4qc4AmwVlvv0oLiVAGB7enBSJ2x2DqQFi38=
 github.com/google/go-cmp v0.5.9/go.mod h1:17dUlkBOakJ0+DkrSSNjCkIjxS6bF9zb3elmeNGIjoY=
 github.com/ishidawataru/sctp v0.0.0-20210707070123-9a39160e9062 h1:G1+wBT0dwjIrBdLy0MIG0i+E4CQxEnedHXdauJEIH6g=
 github.com/ishidawataru/sctp v0.0.0-20210707070123-9a39160e9062/go.mod h1:co9pwDoBCm1kGxawmb4sPq0cSIOOWNPT4KnHotMP1Zg=
-github.com/pascaldekloe/goe v0.1.0/go.mod h1:lzWF7FIEvWOWxwDKqyGYQf6ZUaNfKdP144TG7ZOy1lc=
 github.com/pascaldekloe/goe v0.1.1 h1:Ah6WQ56rZONR3RW3qWa2NCZ6JAVvSpUcoLBaOmYFt9Q=
 github.com/pascaldekloe/goe v0.1.1/go.mod h1:KSyfaxQOh0HZPjDP1FL/kFtbqYqrALJTaMafFUIccqU=
-github.com/pkg/errors v0.8.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
-github.com/pkg/errors v0.9.1 h1:FEBLx1zS214owpjy7qsBeixbURkuhQAwrK5UwLGTwt4=
-github.com/pkg/errors v0.9.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
 github.com/wmnsk/go-m3ua v0.1.9 h1:3dhHT63HQ9CVFRwqKrHi54nIonHbRDnuYPIhLnUQ4Pg=
 github.com/wmnsk/go-m3ua v0.1.9/go.mod h1:OtE8HG+xgrjwmdVbXI+x4Xkm4HtdhDha+Ztbb/H8HSQ=
-github.com/wmnsk/go-sccp v0.0.1 h1:Gew9BTUvNlM76IPEdAWWr4vTU3w9le9fZ+75nNY7Nck=
-github.com/wmnsk/go-sccp v0.0.1/go.mod h1:BYI89D0daaIbA0VXv0brouzVEKUflHVZPut7ZsjPytI=
+github.com/wmnsk/go-sccp v0.0.2 h1:OC4yX+95H6HstxXdxHzHy7ByNWAHErUhf1E2DZ7t5Gs=
+github.com/wmnsk/go-sccp v0.0.2/go.mod h1:u3PWZ/bd3SqWQbeopgSvd4W3ILI9D4O/1GkYIJ3xXoU=
