@@ -194,7 +194,7 @@ func (d *Dialogue) MarshalLen() int {
 		l += field.MarshalLen()
 	}
 	if field := d.DialoguePDU; field != nil {
-		l += field.MarshalLen() + 2 // 2 = singleAsn1Type IE Header
+		l += field.MarshalLen() + 2 // 2 = SingleAsn1Type IE Header
 	}
 
 	return l + len(d.Payload)
