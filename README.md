@@ -13,7 +13,7 @@ Package tcap provides simple and painless handling of TCAP (Transaction Capabili
 
 Though TCAP is an ASN.1-based protocol, this implementation does not use any ASN.1 parser. That makes this implementation flexible enough to create arbitrary payload with any combinations, which is useful for testing while it also means that many of the features in TCAP are not supported yet.
 
-This is still an experimental project, and currently in its very early stage of development. Any part of implementations(including exported APIs) may be changed before released as v1.0.0.
+This is still an experimental project, and currently in its very early stage of development. Any part of implementations (including exported APIs) may be changed before released as v1.0.0.
 
 ## Getting started
 
@@ -136,7 +136,7 @@ _If you are looking for a server that just can accept a SCTP/M3UA connection to 
 
 ## Author(s)
 
-Yoshiyuki Kurauchi ([Website](https://wmnsk.com/))
+[Yoshiyuki Kurauchi](https://wmnsk.com/)
 
 ## LICENSE
 
