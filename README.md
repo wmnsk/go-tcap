@@ -2,10 +2,10 @@
 
 Simple TCAP implementation in the Go Programming Language.
 
-![CI status](https://github.com/wmnsk/go-tcap/actions/workflows/go.yml/badge.svg)
+[![CI status](https://github.com/wmnsk/go-tcap/actions/workflows/go.yml/badge.svg)](https://github.com/wmnsk/go-tcap/actions/workflows/go.yml)
 [![golangci-lint](https://github.com/wmnsk/go-tcap/actions/workflows/golangci-lint.yml/badge.svg)](https://github.com/wmnsk/go-tcap/actions/workflows/golangci-lint.yml)
 [![Go Reference](https://pkg.go.dev/badge/github.com/wmnsk/go-tcap.svg)](https://pkg.go.dev/github.com/wmnsk/go-tcap)
-[![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/wmnsk/go-tcap/blob/master/LICENSE)
+[![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/wmnsk/go-tcap/blob/main/LICENSE)
 
 Package tcap provides simple and painless handling of TCAP (Transaction Capabilities Application Part) in SS7/SIGTRAN protocol stack, intended for Go developers to use.
 
@@ -74,7 +74,7 @@ Usage of client:
         Hex representation of the payload (default "040800010121436587f9")
 ```
 
-_If you are looking for a server that just can accept a SCTP/M3UA connection to receive a TCAP packet, [server example in go-m3ua project](https://github.com/wmnsk/go-m3ua/blob/master/examples/server/m3ua-server.go) would be a nice choice for you._
+_If you are looking for a server that just can accept a SCTP/M3UA connection to receive a TCAP packet, [server example in go-m3ua project](https://github.com/wmnsk/go-m3ua/blob/main/examples/server/m3ua-server.go) would be a nice choice for you._
 
 ## Supported Features
 
@@ -140,4 +140,4 @@ _If you are looking for a server that just can accept a SCTP/M3UA connection to 
 
 ## LICENSE
 
-[MIT](https://github.com/wmnsk/go-tcap/blob/master/LICENSE)
+[MIT](https://github.com/wmnsk/go-tcap/blob/main/LICENSE)
